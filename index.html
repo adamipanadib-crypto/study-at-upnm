@@ -1,0 +1,2845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BeachAware | Awareness at the Beach</title>
+
+    <meta name="description"
+          content="BeachAware is an interactive environmental awareness website dedicated to protecting beaches, oceans and marine life.">
+
+    <meta name="keywords"
+          content="beach awareness, ocean awareness, marine life, plastic pollution, beach cleanup, environment">
+
+    <meta name="author" content="BeachAware">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            color: #12343b;
+            background: #f7fbfc;
+            overflow-x: hidden;
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input,
+        textarea {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        :root {
+            --deep: #062f3b;
+            --deep-2: #084c5c;
+            --ocean: #00a6c7;
+            --cyan: #6ee7ef;
+            --light: #effbfd;
+            --white: #ffffff;
+            --text: #12343b;
+            --muted: #71868c;
+            --border: #dcecef;
+            --shadow: 0 25px 70px rgba(0, 55, 70, 0.12);
+        }
+
+        ::selection {
+            background: var(--ocean);
+            color: white;
+        }
+
+        /* =====================================================
+           PRELOADER
+        ===================================================== */
+
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity .6s, visibility .6s;
+        }
+
+        .loader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-inner {
+            text-align: center;
+            color: white;
+        }
+
+        .loader-wave {
+            font-size: 55px;
+            animation: float 1.5s infinite ease-in-out;
+        }
+
+        .loader-inner h2 {
+            margin-top: 10px;
+            letter-spacing: 3px;
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 82px;
+            padding: 0 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            color: white;
+            transition: .35s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255,255,255,.95);
+            color: var(--deep);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 40px rgba(0,0,0,.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 21px;
+            letter-spacing: -.5px;
+        }
+
+        .logo-icon {
+            font-size: 27px;
+        }
+
+        .logo-highlight {
+            color: var(--cyan);
+        }
+
+        .navbar.scrolled .logo-highlight {
+            color: var(--ocean);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            position: relative;
+            font-size: 13px;
+            font-weight: 600;
+            opacity: .9;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -7px;
+            width: 0;
+            height: 2px;
+            background: var(--cyan);
+            transition: .3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-pledge {
+            padding: 11px 18px;
+            border: 1px solid rgba(255,255,255,.45);
+            border-radius: 30px;
+        }
+
+        .navbar.scrolled .nav-pledge {
+            border-color: var(--ocean);
+            color: var(--ocean);
+        }
+
+        .menu-btn {
+            display: none;
+            border: none;
+            background: none;
+            color: inherit;
+            font-size: 28px;
+        }
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 120px 8%;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(2,35,46,.86),
+                    rgba(2,35,46,.48),
+                    rgba(2,35,46,.18)
+                ),
+                url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2200&q=90");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-content {
+            max-width: 760px;
+            color: white;
+            position: relative;
+            z-index: 2;
+            animation: heroIn 1s ease;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 17px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,.35);
+            background: rgba(255,255,255,.08);
+            backdrop-filter: blur(10px);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(55px, 8vw, 100px);
+            line-height: .95;
+            margin-bottom: 27px;
+        }
+
+        .hero h1 span {
+            color: var(--cyan);
+        }
+
+        .hero-description {
+            max-width: 610px;
+            font-size: 17px;
+            line-height: 1.8;
+            color: #e2f2f4;
+            margin-bottom: 35px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .btn {
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: .3s;
+        }
+
+        .btn-primary {
+            background: var(--ocean);
+            color: white;
+            box-shadow: 0 15px 40px rgba(0,166,199,.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            background: #008eaa;
+        }
+
+        .btn-outline {
+            color: white;
+            border: 1px solid rgba(255,255,255,.5);
+            background: rgba(255,255,255,.04);
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--deep);
+        }
+
+        .hero-stats {
+            position: absolute;
+            bottom: 45px;
+            right: 8%;
+            display: flex;
+            gap: 35px;
+            color: white;
+            z-index: 2;
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 25px;
+        }
+
+        .hero-stat span {
+            font-size: 10px;
+            color: #c8e3e6;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 35px;
+            left: 8%;
+            color: white;
+            font-size: 10px;
+            letter-spacing: 2px;
+            opacity: .75;
+        }
+
+        /* =====================================================
+           SECTION
+        ===================================================== */
+
+        .section {
+            padding: 110px 8%;
+        }
+
+        .section-label {
+            color: var(--ocean);
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            font-weight: 800;
+        }
+
+        .section-heading {
+            margin-top: 13px;
+            font-family: "Playfair Display", serif;
+            font-size: clamp(40px, 5vw, 65px);
+            line-height: 1.02;
+            color: var(--deep);
+        }
+
+        .section-heading span {
+            color: var(--ocean);
+        }
+
+        .section-description {
+            max-width: 650px;
+            color: var(--muted);
+            line-height: 1.8;
+            margin-top: 18px;
+        }
+
+        .center {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* =====================================================
+           ABOUT
+        ===================================================== */
+
+        .about {
+            background: white;
+        }
+
+        .about-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 40px;
+            margin-bottom: 55px;
+        }
+
+        .about-top .section-description {
+            max-width: 430px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 25px;
+        }
+
+        .feature-card {
+            padding: 38px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            background: #f7fcfd;
+            transition: .4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #e4f9fb;
+            right: -30px;
+            top: -30px;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon {
+            position: relative;
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: white;
+            font-size: 31px;
+            margin-bottom: 25px;
+        }
+
+        .feature-card h3 {
+            position: relative;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           STATS
+        ===================================================== */
+
+        .impact {
+            background: var(--deep);
+            color: white;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+        }
+
+        .impact-item {
+            text-align: center;
+            padding: 20px 30px;
+            border-right: 1px solid rgba(255,255,255,.13);
+        }
+
+        .impact-item:last-child {
+            border-right: none;
+        }
+
+        .counter {
+            font-size: 50px;
+            font-weight: 800;
+            color: var(--cyan);
+            margin-bottom: 7px;
+        }
+
+        .impact-item p {
+            color: #b7d2d7;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           PROBLEMS
+        ===================================================== */
+
+        .problems {
+            background: #f5fafb;
+        }
+
+        .problem-grid {
+            margin-top: 55px;
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 18px;
+        }
+
+        .problem-card {
+            min-height: 330px;
+            padding: 32px;
+            border-radius: 25px;
+            background: white;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: .4s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-9px);
+            box-shadow: var(--shadow);
+        }
+
+        .problem-icon {
+            font-size: 42px;
+            margin-bottom: 40px;
+        }
+
+        .problem-card h3 {
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .problem-card p {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 13px;
+        }
+
+        .problem-number {
+            position: absolute;
+            right: 22px;
+            bottom: 10px;
+            color: #eef5f6;
+            font-size: 60px;
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           SOLUTIONS
+        ===================================================== */
+
+        .solutions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0;
+            background: white;
+        }
+
+        .solution-photo {
+            min-height: 750px;
+            background:
+                linear-gradient(
+                    rgba(0,65,80,.25),
+                    rgba(0,35,50,.7)
+                ),
+                url("https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1500&q=90");
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .solution-overlay {
+            position: absolute;
+            left: 10%;
+            bottom: 10%;
+            color: white;
+        }
+
+        .solution-overlay small {
+            letter-spacing: 2px;
+            font-size: 10px;
+        }
+
+        .solution-overlay h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 55px;
+            line-height: 1;
+            margin-top: 15px;
+        }
+
+        .solution-content {
+            padding: 100px 10%;
+        }
+
+        .solution-list {
+            margin-top: 45px;
+        }
+
+        .solution-item {
+            display: flex;
+            gap: 18px;
+            padding: 23px 0;
+            border-bottom: 1px solid #e8f0f1;
+        }
+
+        .solution-item:last-child {
+            border-bottom: none;
+        }
+
+        .solution-icon {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
+            border-radius: 15px;
+            font-size: 23px;
+        }
+
+        .solution-item h3 {
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .solution-item p {
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           CHECKLIST
+        ===================================================== */
+
+        .checklist {
+            background: #edf9fa;
+        }
+
+        .checklist-box {
+            max-width: 850px;
+            margin: 55px auto 0;
+            background: white;
+            padding: 40px;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 0;
+            border-bottom: 1px solid #edf2f3;
+            color: #45646b;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .check-item input {
+            display: none;
+        }
+
+        .custom-check {
+            width: 23px;
+            height: 23px;
+            border: 2px solid #bfd4d8;
+            border-radius: 7px;
+            flex-shrink: 0;
+            transition: .2s;
+        }
+
+        .check-item input:checked + .custom-check {
+            background: var(--ocean);
+            border-color: var(--ocean);
+            position: relative;
+        }
+
+        .check-item input:checked + .custom-check::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            left: 4px;
+            top: -1px;
+        }
+
+        .check-item input:checked ~ span:last-child {
+            text-decoration: line-through;
+            opacity: .55;
+        }
+
+        .progress-area {
+            margin-top: 35px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .progress-track {
+            height: 11px;
+            background: #e8f0f1;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg,var(--ocean),var(--cyan));
+            transition: .5s;
+        }
+
+        /* =====================================================
+           QUIZ
+        ===================================================== */
+
+        .quiz-section {
+            background: var(--deep);
+            padding: 110px 8%;
+        }
+
+        .quiz-wrap {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .quiz-intro {
+            color: white;
+            margin-bottom: 45px;
+        }
+
+        .quiz-intro .section-heading {
+            color: white;
+        }
+
+        .quiz-intro .section-description {
+            color: #b8d4d9;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 28px;
+            padding: 45px;
+            min-height: 440px;
+            box-shadow: 0 30px 90px rgba(0,0,0,.2);
+        }
+
+        .quiz-progress-track {
+            height: 6px;
+            background: #e7f0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 35px;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            width: 20%;
+            background: var(--ocean);
+            transition: .4s;
+        }
+
+        .question-number {
+            color: var(--ocean);
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .question {
+            max-width: 800px;
+            font-size: 25px;
+            line-height: 1.4;
+            margin-bottom: 30px;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .answer {
+            text-align: left;
+            padding: 18px;
+            background: white;
+            border: 2px solid #e4edef;
+            border-radius: 14px;
+            font-size: 13px;
+            transition: .25s;
+        }
+
+        .answer:hover {
+            border-color: var(--ocean);
+            color: var(--ocean);
+        }
+
+        .answer.correct {
+            background: #e6f8ed;
+            border-color: #37b76c;
+            color: #20874d;
+        }
+
+        .answer.wrong {
+            background: #fff0f0;
+            border-color: #e36b6b;
+            color: #c53d3d;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .quiz-result-icon {
+            font-size: 65px;
+            margin-bottom: 10px;
+        }
+
+        .quiz-result h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 40px;
+            color: var(--deep);
+        }
+
+        .quiz-result p {
+            color: var(--muted);
+            margin: 10px 0 20px;
+        }
+
+        .quiz-score {
+            font-size: 50px;
+            font-weight: 800;
+            color: var(--ocean);
+            margin-bottom: 25px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* =====================================================
+           GALLERY
+        ===================================================== */
+
+        .gallery {
+            background: white;
+        }
+
+        .gallery-grid {
+            margin-top: 50px;
+            display: grid;
+            grid-template-columns: 1.3fr .8fr .8fr;
+            grid-template-rows: 230px 230px;
+            gap: 15px;
+        }
+
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .gallery-item:first-child {
+            grid-row: span 2;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: .5s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.07);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            left: 20px;
+            bottom: 18px;
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,.5);
+        }
+
+        /* =====================================================
+           CTA
+        ===================================================== */
+
+        .cta {
+            min-height: 540px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 90px 8%;
+            color: white;
+            background:
+                linear-gradient(
+                    rgba(0,85,105,.82),
+                    rgba(0,35,50,.9)
+                ),
+                url("https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=2000&q=90");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .cta-content {
+            max-width: 720px;
+        }
+
+        .cta-content small {
+            letter-spacing: 2px;
+            color: #9bf2f4;
+            font-weight: 700;
+        }
+
+        .cta h2 {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(45px, 7vw, 75px);
+            line-height: 1;
+            margin: 20px 0;
+        }
+
+        .cta h2 span {
+            color: var(--cyan);
+        }
+
+        .cta p {
+            color: #d4eaed;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .white-btn {
+            background: white;
+            color: var(--deep);
+        }
+
+        .white-btn:hover {
+            transform: translateY(-4px);
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            background: #032832;
+            color: white;
+            padding: 70px 8% 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+            padding-bottom: 55px;
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+            color: #8fb2b9;
+            line-height: 1.7;
+            font-size: 13px;
+            margin-top: 18px;
+        }
+
+        .footer-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-col h3 {
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .footer-col a {
+            color: #8fb2b9;
+            font-size: 12px;
+            transition: .2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--cyan);
+        }
+
+        .socials {
+            display: flex;
+            gap: 9px;
+        }
+
+        .social {
+            width: 39px;
+            height: 39px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,.08);
+            transition: .3s;
+        }
+
+        .social:hover {
+            background: var(--ocean);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,.1);
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            color: #668d96;
+            font-size: 10px;
+        }
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,25,35,.75);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 5000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            max-width: 460px;
+            width: 100%;
+            padding: 45px;
+            background: white;
+            border-radius: 28px;
+            text-align: center;
+            position: relative;
+            animation: modalIn .35s ease;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            border: none;
+            background: none;
+            font-size: 29px;
+            color: #789;
+        }
+
+        .modal-icon {
+            font-size: 60px;
+        }
+
+        .modal-box h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 38px;
+            color: var(--deep);
+            margin: 10px 0;
+        }
+
+        .modal-box p {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        /* =====================================================
+           BACK TO TOP
+        ===================================================== */
+
+        .back-top {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 50%;
+            background: var(--ocean);
+            color: white;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: .3s;
+            z-index: 900;
+        }
+
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* =====================================================
+           ANIMATIONS
+        ===================================================== */
+
+        @keyframes heroIn {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media(max-width:1000px) {
+
+            .feature-grid,
+            .problem-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .impact-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .impact-item:nth-child(2) {
+                border-right: none;
+            }
+
+            .solutions {
+                grid-template-columns: 1fr;
+            }
+
+            .solution-photo {
+                min-height: 550px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 300px 200px 200px;
+            }
+
+            .gallery-item:first-child {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+        }
+
+        @media(max-width:768px) {
+
+            .navbar {
+                height: 70px;
+                padding: 0 6%;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                color: var(--deep);
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: .35s;
+                box-shadow: 0 15px 30px rgba(0,0,0,.08);
+            }
+
+            .nav-links.active {
+                max-height: 500px;
+            }
+
+            .nav-links a {
+                padding: 17px 7%;
+                border-bottom: 1px solid #edf2f3;
+            }
+
+            .nav-pledge {
+                border: none !important;
+                color: var(--deep) !important;
+                border-radius: 0;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 120px 7% 90px;
+            }
+
+            .hero h1 {
+                font-size: 57px;
+            }
+
+            .hero-stats {
+                display: none;
+            }
+
+            .scroll-indicator {
+                left: 7%;
+            }
+
+            .section {
+                padding: 80px 7%;
+            }
+
+            .about-top {
+                display: block;
+            }
+
+            .feature-grid,
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .impact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .impact-item {
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,.12);
+                padding: 30px;
+            }
+
+            .impact-item:last-child {
+                border-bottom: none;
+            }
+
+            .answers {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-card {
+                padding: 27px;
+            }
+
+            .question {
+                font-size: 21px;
+            }
+
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(3,230px);
+            }
+
+            .gallery-item:first-child {
+                grid-column: auto;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media(max-width:500px) {
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .section-heading {
+                font-size: 40px;
+            }
+
+            .checklist-box {
+                padding: 25px 20px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-box {
+                padding: 35px 25px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     PRELOADER
+===================================================== -->
+
+<div class="loader" id="loader">
+    <div class="loader-inner">
+        <div class="loader-wave">🌊</div>
+        <h2>BEACHAWARE</h2>
+    </div>
+</div>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="navbar" id="navbar">
+
+    <a href="#home" class="logo">
+        <span class="logo-icon">🌊</span>
+        <span>Beach<span class="logo-highlight">Aware</span></span>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#problems">Problems</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#quiz">Quiz</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact" class="nav-pledge">Make a Pledge</a>
+
+    </nav>
+
+    <button class="menu-btn" id="menuBtn">
+        ☰
+    </button>
+
+</header>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+            🌎 PROTECT OUR OCEANS
+        </div>
+
+        <h1>
+            Awareness
+            <br>
+            <span>at the Beach.</span>
+        </h1>
+
+        <p class="hero-description">
+            Our beaches are more than beautiful places.
+            They are homes for marine life, protect our coastlines
+            and connect communities. Every small action can create
+            a big wave of change.
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="#solutions" class="btn btn-primary">
+                Discover How →
+            </a>
+
+            <a href="#quiz" class="btn btn-outline">
+                Take the Quiz
+            </a>
+
+        </div>
+        <!-- VIEW COUNTER -->
+<div class="view-counter">
+    👁️
+    <span id="viewCount">0</span>
+    <span>Website Views</span>
+</div>
+
+    </div>
+
+    <div class="hero-stats">
+
+        <div class="hero-stat">
+            <strong>01</strong>
+            <span>PLANET</span>
+        </div>
+
+        <div class="hero-stat">
+            <strong>∞</strong>
+            <span>POSSIBILITIES</span>
+        </div>
+
+        <div class="hero-stat">
+            <strong>YOU</strong>
+            <span>CAN HELP</span>
+        </div>
+
+    </div>
+
+    <div class="scroll-indicator">
+        SCROLL TO EXPLORE ↓
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section class="section about" id="about">
+
+    <div class="about-top">
+
+        <div>
+
+            <div class="section-label">
+                WHY IT MATTERS
+            </div>
+
+            <h2 class="section-heading">
+                Our Beach,
+                <br>
+                <span>Our Responsibility.</span>
+            </h2>
+
+        </div>
+
+        <p class="section-description">
+            Beaches are important ecosystems that support marine
+            life, protect coastlines and provide valuable spaces
+            for people. Protecting them is everyone's responsibility.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <article class="feature-card">
+
+            <div class="feature-icon">
+                🐢
+            </div>
+
+            <h3>Protect Marine Life</h3>
+
+            <p>
+                Cleaner beaches create safer habitats for turtles,
+                fish, seabirds and countless marine organisms.
+            </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+            <div class="feature-icon">
+                🌱
+            </div>
+
+            <h3>Healthy Ecosystems</h3>
+
+            <p>
+                Coastal ecosystems help support biodiversity and
+                maintain the natural balance of our oceans.
+            </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+            <div class="feature-icon">
+                🌍
+            </div>
+
+            <h3>Protect Our Future</h3>
+
+            <p>
+                Responsible choices today can help future generations
+                enjoy cleaner, healthier and safer beaches.
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     IMPACT STATS
+===================================================== -->
+
+<section class="section impact">
+
+    <div class="impact-grid">
+
+        <div class="impact-item">
+
+            <div class="counter" data-target="80" data-suffix="%">
+                0%
+            </div>
+
+            <p>
+                of marine pollution is linked
+                to land-based sources.
+            </p>
+
+        </div>
+
+
+        <div class="impact-item">
+
+            <div class="counter" data-target="8" data-suffix="M+">
+                0
+            </div>
+
+            <p>
+                tonnes of plastic waste can
+                enter oceans every year.
+            </p>
+
+        </div>
+
+
+        <div class="impact-item">
+
+            <div class="counter" data-target="700" data-suffix="+">
+                0
+            </div>
+
+            <p>
+                marine species have been
+                impacted by plastic pollution.
+            </p>
+
+        </div>
+
+
+        <div class="impact-item">
+
+            <div class="counter" data-target="1" data-suffix="">
+                0
+            </div>
+
+            <p>
+                planet that we all share
+                and need to protect.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROBLEMS
+===================================================== -->
+
+<section class="section problems" id="problems">
+
+    <div class="center">
+
+        <div class="section-label">
+            THE PROBLEM
+        </div>
+
+        <h2 class="section-heading">
+            What Is Happening
+            <br>
+            <span>to Our Beaches?</span>
+        </h2>
+
+        <p class="section-description center">
+            Human activities can have a significant impact
+            on coastal environments and marine ecosystems.
+        </p>
+
+    </div>
+
+
+    <div class="problem-grid">
+
+        <article class="problem-card">
+
+            <div class="problem-icon">
+                🧴
+            </div>
+
+            <h3>Plastic Pollution</h3>
+
+            <p>
+                Plastic bottles, bags, packaging and other waste
+                can remain in the environment for many years.
+            </p>
+
+            <span class="problem-number">
+                01
+            </span>
+
+        </article>
+
+
+        <article class="problem-card">
+
+            <div class="problem-icon">
+                🗑️
+            </div>
+
+            <h3>Littering</h3>
+
+            <p>
+                Rubbish left behind by visitors can harm wildlife,
+                damage habitats and make beaches unsafe.
+            </p>
+
+            <span class="problem-number">
+                02
+            </span>
+
+        </article>
+
+
+        <article class="problem-card">
+
+            <div class="problem-icon">
+                💧
+            </div>
+
+            <h3>Water Pollution</h3>
+
+            <p>
+                Wastewater, chemicals and other pollutants can
+                enter the ocean and affect marine ecosystems.
+            </p>
+
+            <span class="problem-number">
+                03
+            </span>
+
+        </article>
+
+
+        <article class="problem-card">
+
+            <div class="problem-icon">
+                🐠
+            </div>
+
+            <h3>Threat to Wildlife</h3>
+
+            <p>
+                Marine animals can be affected by pollution,
+                habitat destruction and human disturbance.
+            </p>
+
+            <span class="problem-number">
+                04
+            </span>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SOLUTIONS
+===================================================== -->
+
+<section class="solutions" id="solutions">
+
+    <div class="solution-photo">
+
+        <div class="solution-overlay">
+
+            <small>
+                EVERY ACTION COUNTS
+            </small>
+
+            <h2>
+                Be Part of
+                <br>
+                the Solution.
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="solution-content">
+
+        <div class="section-label">
+            WHAT YOU CAN DO
+        </div>
+
+        <h2 class="section-heading">
+            Simple Ways to
+            <br>
+            <span>Protect the Beach.</span>
+        </h2>
+
+
+        <div class="solution-list">
+
+            <div class="solution-item">
+
+                <div class="solution-icon">
+                    ♻️
+                </div>
+
+                <div>
+
+                    <h3>Reduce Plastic</h3>
+
+                    <p>
+                        Choose reusable bottles, bags and containers
+                        whenever possible.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="solution-item">
+
+                <div class="solution-icon">
+                    🗑️
+                </div>
+
+                <div>
+
+                    <h3>Dispose Waste Properly</h3>
+
+                    <p>
+                        Use appropriate bins and recycle materials
+                        whenever facilities are available.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="solution-item">
+
+                <div class="solution-icon">
+                    🐢
+                </div>
+
+                <div>
+
+                    <h3>Respect Wildlife</h3>
+
+                    <p>
+                        Keep a safe distance from marine animals,
+                        nests and sensitive coastal habitats.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="solution-item">
+
+                <div class="solution-icon">
+                    🧹
+                </div>
+
+                <div>
+
+                    <h3>Join Beach Cleanups</h3>
+
+                    <p>
+                        Participate in community activities and
+                        encourage others to protect the coastline.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CHECKLIST
+===================================================== -->
+
+<section class="section checklist">
+
+    <div class="center">
+
+        <div class="section-label">
+            BEACH HERO CHECKLIST
+        </div>
+
+        <h2 class="section-heading">
+            How Beach-Friendly
+            <br>
+            <span>Are You?</span>
+        </h2>
+
+        <p class="section-description center">
+            Check the actions you promise to follow whenever
+            you visit a beach.
+        </p>
+
+    </div>
+
+
+    <div class="checklist-box">
+
+        <label class="check-item">
+
+            <input type="checkbox" class="check">
+
+            <span class="custom-check"></span>
+
+            <span>
+                I will bring a reusable water bottle.
+            </span>
+
+        </label>
+
+
+        <label class="check-item">
+
+            <input type="checkbox" class="check">
+
+            <span class="custom-check"></span>
+
+            <span>
+                I will not leave rubbish on the beach.
+            </span>
+
+        </label>
+
+
+        <label class="check-item">
+
+            <input type="checkbox" class="check">
+
+            <span class="custom-check"></span>
+
+            <span>
+                I will avoid unnecessary single-use plastic.
+            </span>
+
+        </label>
+
+
+        <label class="check-item">
+
+            <input type="checkbox" class="check">
+
+            <span class="custom-check"></span>
+
+            <span>
+                I will respect marine animals and habitats.
+            </span>
+
+        </label>
+
+
+        <label class="check-item">
+
+            <input type="checkbox" class="check">
+
+            <span class="custom-check"></span>
+
+            <span>
+                I will encourage friends to protect the beach.
+            </span>
+
+        </label>
+
+
+        <div class="progress-area">
+
+            <div class="progress-top">
+
+                <span>
+                    Your Beach Hero Progress
+                </span>
+
+                <span id="progressPercent">
+                    0%
+                </span>
+
+            </div>
+
+            <div class="progress-track">
+
+                <div class="progress-fill" id="progressFill"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     QUIZ
+===================================================== -->
+
+<section class="quiz-section" id="quiz">
+
+    <div class="quiz-wrap">
+
+        <div class="quiz-intro">
+
+            <div class="section-label">
+                🌊 TEST YOUR KNOWLEDGE
+            </div>
+
+            <h2 class="section-heading">
+                Beach Awareness
+                <br>
+                <span>Quiz.</span>
+            </h2>
+
+            <p class="section-description">
+                Answer five questions and test how much you know
+                about protecting beaches and marine environments.
+            </p>
+
+        </div>
+
+
+        <div class="quiz-card">
+
+            <div class="quiz-progress-track">
+
+                <div class="quiz-progress-fill"
+                     id="quizProgress"></div>
+
+            </div>
+
+
+            <div id="quizContent">
+
+                <div class="question-number">
+                    QUESTION <span id="questionNumber">1</span> / 5
+                </div>
+
+                <h3 class="question" id="question">
+                    Which item can be reused many times instead
+                    of using a single-use plastic bottle?
+                </h3>
+
+                <div class="answers" id="answers"></div>
+
+            </div>
+
+
+            <div class="quiz-result hidden" id="quizResult">
+
+                <div class="quiz-result-icon">
+                    🌊
+                </div>
+
+                <h2>
+                    Well Done!
+                </h2>
+
+                <p>
+                    You completed the Beach Awareness Quiz.
+                </p>
+
+                <div class="quiz-score" id="score">
+                    0 / 5
+                </div>
+
+                <button class="btn btn-primary"
+                        id="restartQuiz">
+                    Try Again
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     GALLERY
+===================================================== -->
+
+<section class="section gallery" id="gallery">
+
+    <div class="center">
+
+        <div class="section-label">
+            OUR OCEAN
+        </div>
+
+        <h2 class="section-heading">
+            Beautiful Beaches,
+            <br>
+            <span>Worth Protecting.</span>
+        </h2>
+
+        <p class="section-description center">
+            A clean coastline creates a healthier environment
+            for people, wildlife and future generations.
+        </p>
+
+    </div>
+
+
+    <div class="gallery-grid">
+
+        <div class="gallery-item">
+
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85"
+                 alt="Beautiful tropical beach">
+
+            <div class="gallery-caption">
+                Clean Coastlines
+            </div>
+
+        </div>
+
+
+        <div class="gallery-item">
+
+            <img src="https://images.unsplash.com/photo-1439405326854-014607f694d7?auto=format&fit=crop&w=900&q=85"
+                 alt="Ocean waves">
+
+            <div class="gallery-caption">
+                Healthy Oceans
+            </div>
+
+        </div>
+
+
+        <div class="gallery-item">
+
+            <img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=900&q=85"
+                 alt="Beach landscape">
+
+            <div class="gallery-caption">
+                Natural Beauty
+            </div>
+
+        </div>
+
+
+        <div class="gallery-item">
+
+            <img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85"
+                 alt="Coastal landscape">
+
+            <div class="gallery-caption">
+                Protect Nature
+            </div>
+
+        </div>
+
+
+        <div class="gallery-item">
+
+            <img src="https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=900&q=85"
+                 alt="Ocean coastline">
+
+            <div class="gallery-caption">
+                One Planet
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CTA
+===================================================== -->
+
+<section class="cta" id="contact">
+
+    <div class="cta-content">
+
+        <small>
+            🌊 THE OCEAN NEEDS YOU
+        </small>
+
+        <h2>
+            Be the Change.
+            <br>
+            <span>Protect the Beach.</span>
+        </h2>
+
+        <p>
+            One person can make a difference.
+            When we work together, we can create cleaner,
+            healthier and more beautiful beaches.
+        </p>
+
+        <button class="btn white-btn" id="pledgeBtn">
+            Make a Pledge
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-grid">
+
+        <div class="footer-brand">
+
+            <a href="#home" class="logo">
+
+                <span class="logo-icon">🌊</span>
+
+                <span>
+                    Beach<span class="logo-highlight">Aware</span>
+                </span>
+
+            </a>
+
+            <p>
+                Raising awareness today for a cleaner ocean
+                and healthier planet tomorrow.
+            </p>
+
+        </div>
+
+
+        <div class="footer-col">
+
+            <h3>Explore</h3>
+
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#problems">Problems</a>
+            <a href="#solutions">Solutions</a>
+
+        </div>
+
+
+        <div class="footer-col">
+
+            <h3>Learn</h3>
+
+            <a href="#quiz">Awareness Quiz</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#contact">Make a Pledge</a>
+
+        </div>
+
+
+        <div class="footer-col">
+
+            <h3>Follow Us</h3>
+
+            <div class="socials">
+
+                <a href="#"
+                   class="social"
+                   aria-label="Instagram">
+                    ◎
+                </a>
+
+                <a href="#"
+                   class="social"
+                   aria-label="Facebook">
+                    f
+                </a>
+
+                <a href="#"
+                   class="social"
+                   aria-label="TikTok">
+                    ♪
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+    <button></button>
+
+
+    <div class="footer-bottom">
+
+        <span>
+            © 2026 BeachAware. All Rights Reserved.
+        </span>
+
+        <span>
+            Made with 🌊 for our planet.
+        </span>
+
+    </div>
+</footer>
+
+
+<!-- =====================================================
+     PLEDGE MODAL
+===================================================== -->
+
+<div class="modal" id="pledgeModal">
+
+    <div class="modal-box">
+
+        <button class="modal-close"
+                id="closeModal">
+            ×
+        </button>
+
+        <div class="modal-icon">
+            🌊
+        </div>
+
+        <h2>
+            Thank You!
+        </h2>
+
+        <p>
+            Your pledge matters. Every responsible action helps
+            create cleaner beaches and protect marine life.
+        </p>
+
+        <button class="btn btn-primary"
+                id="doneBtn">
+            I Will Make a Difference
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     BACK TO TOP
+===================================================== -->
+
+<button class="back-top" id="backTop">
+    ↑
+</button>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+    /* =====================================================
+       LOADER
+    ===================================================== */
+
+    window.addEventListener("load", function () {
+
+        const loader = document.getElementById("loader");
+
+        setTimeout(function () {
+            loader.classList.add("hide");
+        }, 700);
+
+    });
+
+
+    /* =====================================================
+       NAVBAR
+    ===================================================== */
+
+    const navbar = document.getElementById("navbar");
+    const navLinks = document.getElementById("navLinks");
+    const menuBtn = document.getElementById("menuBtn");
+    const backTop = document.getElementById("backTop");
+
+    window.addEventListener("scroll", function () {
+
+        if (window.scrollY > 60) {
+            navbar.classList.add("scrolled");
+            backTop.classList.add("show");
+        } else {
+            navbar.classList.remove("scrolled");
+            backTop.classList.remove("show");
+        }
+
+    });
+
+
+    /* Mobile menu */
+
+    menuBtn.addEventListener("click", function () {
+
+        navLinks.classList.toggle("active");
+        document.body.classList.toggle("menu-open");
+
+        if (navLinks.classList.contains("active")) {
+            menuBtn.textContent = "×";
+        } else {
+            menuBtn.textContent = "☰";
+        }
+
+    });
+
+
+    /* Close menu after clicking */
+
+    document.querySelectorAll(".nav-links a").forEach(function (link) {
+
+        link.addEventListener("click", function () {
+
+            navLinks.classList.remove("active");
+            document.body.classList.remove("menu-open");
+
+            menuBtn.textContent = "☰";
+
+        });
+
+    });
+
+
+    /* Back to top */
+
+    backTop.addEventListener("click", function () {
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    });
+
+
+    /* =====================================================
+       COUNTERS
+    ===================================================== */
+
+    const counters = document.querySelectorAll(".counter");
+
+    const counterObserver = new IntersectionObserver(function (entries) {
+
+        entries.forEach(function (entry) {
+
+            if (!entry.isIntersecting) {
+                return;
+            }
+
+            const counter = entry.target;
+
+            const target = Number(counter.dataset.target);
+            const suffix = counter.dataset.suffix || "";
+
+            let current = 0;
+
+            const duration = 1300;
+            const stepTime = 25;
+            const steps = duration / stepTime;
+            const increment = target / steps;
+
+            const timer = setInterval(function () {
+
+                current += increment;
+
+                if (current >= target) {
+
+                    current = target;
+
+                    clearInterval(timer);
+
+                }
+
+                counter.textContent =
+                    Math.floor(current) + suffix;
+
+            }, stepTime);
+
+            counterObserver.unobserve(counter);
+
+        });
+
+    }, {
+        threshold: .5
+    });
+
+
+    counters.forEach(function (counter) {
+        counterObserver.observe(counter);
+    });
+
+
+    /* =====================================================
+       CHECKLIST
+    ===================================================== */
+
+    const checks = document.querySelectorAll(".check");
+    const progressFill = document.getElementById("progressFill");
+    const progressPercent = document.getElementById("progressPercent");
+
+    function updateChecklist() {
+
+        const total = checks.length;
+
+        const completed =
+            document.querySelectorAll(".check:checked").length;
+
+        const percentage =
+            Math.round((completed / total) * 100);
+
+        progressFill.style.width = percentage + "%";
+        progressPercent.textContent = percentage + "%";
+
+    }
+
+    checks.forEach(function (check) {
+
+        check.addEventListener("change", updateChecklist);
+
+    });
+
+
+    /* =====================================================
+       QUIZ
+    ===================================================== */
+
+    const questions = [
+
+        {
+            question:
+                "Which item can be reused many times instead of using a single-use plastic bottle?",
+
+            answers: [
+                "Reusable glass bottle",
+                "Plastic straw",
+                "Plastic bag",
+                "Food wrapper"
+            ],
+
+            correct: 0
+        },
+
+        {
+            question:
+                "What should you do with your rubbish when visiting the beach?",
+
+            answers: [
+                "Leave it under the sand",
+                "Throw it into the ocean",
+                "Put it in the correct bin",
+                "Leave it beside a tree"
+            ],
+
+            correct: 2
+        },
+
+        {
+            question:
+                "Why should we avoid disturbing marine animals?",
+
+            answers: [
+                "They need safe habitats",
+                "They dislike sunlight",
+                "They cannot see people",
+                "It makes beaches colder"
+            ],
+
+            correct: 0
+        },
+
+        {
+            question:
+                "Which activity can directly help reduce beach litter?",
+
+            answers: [
+                "Beach cleanup",
+                "Leaving rubbish behind",
+                "Using more plastic",
+                "Throwing waste into water"
+            ],
+
+            correct: 0
+        },
+
+        {
+            question:
+                "What is one simple way to reduce plastic waste?",
+
+            answers: [
+                "Use reusable products",
+                "Use more plastic bags",
+                "Throw plastic into the ocean",
+                "Leave bottles on the beach"
+            ],
+
+            correct: 0
+        }
+
+    ];
+
+
+    let currentQuestion = 0;
+    let quizScore = 0;
+
+    const questionNumber =
+        document.getElementById("questionNumber");
+
+    const questionText =
+        document.getElementById("question");
+
+    const answersContainer =
+        document.getElementById("answers");
+
+    const quizProgress =
+        document.getElementById("quizProgress");
+
+    const quizContent =
+        document.getElementById("quizContent");
+
+    const quizResult =
+        document.getElementById("quizResult");
+
+    const score =
+        document.getElementById("score");
+
+    const restartQuiz =
+        document.getElementById("restartQuiz");
+
+
+    function loadQuestion() {
+
+        const data = questions[currentQuestion];
+
+        questionNumber.textContent =
+            currentQuestion + 1;
+
+        questionText.textContent =
+            data.question;
+
+        answersContainer.innerHTML = "";
+
+        quizProgress.style.width =
+            ((currentQuestion + 1) / questions.length) * 100 + "%";
+
+
+        data.answers.forEach(function (answer, index) {
+
+            const button =
+                document.createElement("button");
+
+            button.className = "answer";
+
+            button.textContent = answer;
+
+            button.addEventListener("click", function () {
+
+                selectAnswer(index, button);
+
+            });
+
+            answersContainer.appendChild(button);
+
+        });
+
+    }
+
+
+    function selectAnswer(index, selectedButton) {
+
+        const data = questions[currentQuestion];
+
+        const allAnswers =
+            document.querySelectorAll(".answer");
+
+
+        allAnswers.forEach(function (button) {
+
+            button.disabled = true;
+
+        });
+
+
+        if (index === data.correct) {
+
+            selectedButton.classList.add("correct");
+
+            quizScore++;
+
+        } else {
+
+            selectedButton.classList.add("wrong");
+
+            allAnswers[data.correct]
+                .classList.add("correct");
+
+        }
+
+
+        setTimeout(function () {
+
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+
+                loadQuestion();
+
+            } else {
+
+                showQuizResult();
+
+            }
+
+        }, 900);
+
+    }
+
+
+    function showQuizResult() {
+
+        quizContent.classList.add("hidden");
+
+        quizResult.classList.remove("hidden");
+
+        score.textContent =
+            quizScore + " / " + questions.length;
+
+        quizProgress.style.width = "100%";
+
+    }
+
+
+    restartQuiz.addEventListener("click", function () {
+
+        currentQuestion = 0;
+        quizScore = 0;
+
+        quizResult.classList.add("hidden");
+        quizContent.classList.remove("hidden");
+
+        loadQuestion();
+
+    });
+
+
+    loadQuestion();
+
+
+    /* =====================================================
+       PLEDGE MODAL
+    ===================================================== */
+
+    const pledgeBtn =
+        document.getElementById("pledgeBtn");
+
+    const pledgeModal =
+        document.getElementById("pledgeModal");
+
+    const closeModal =
+        document.getElementById("closeModal");
+
+    const doneBtn =
+        document.getElementById("doneBtn");
+
+
+    function openModal() {
+
+        pledgeModal.classList.add("show");
+
+    }
+
+
+    function closePledgeModal() {
+
+        pledgeModal.classList.remove("show");
+
+    }
+
+
+    pledgeBtn.addEventListener("click", openModal);
+
+    closeModal.addEventListener("click", closePledgeModal);
+
+    doneBtn.addEventListener("click", closePledgeModal);
+
+
+    pledgeModal.addEventListener("click", function (event) {
+
+        if (event.target === pledgeModal) {
+
+            closePledgeModal();
+
+        }
+
+    });
+
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+
+            closePledgeModal();
+
+        }
+
+    });
+
+
+    /* =====================================================
+       SMOOTH SCROLL FALLBACK
+    ===================================================== */
+
+    document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+
+        link.addEventListener("click", function (event) {
+
+            const targetID =
+                this.getAttribute("href");
+
+            if (targetID === "#") {
+                return;
+            }
+
+            const target =
+                document.querySelector(targetID);
+
+            if (target) {
+
+                event.preventDefault();
+
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            }
+
+        });
+
+    });
+ 
+
+</script>
+
+</body>
+</html>
