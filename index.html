@@ -2840,6 +2840,25 @@
  
 
 </script>
+<script>
+    // Get previous views from this browser
+    let views = localStorage.getItem("beachAwareViews");
+
+    if (!views) {
+        views = 0;
+    }
+
+    // Add one view
+    views++;
+
+    // Save the new number
+    localStorage.setItem("beachAwareViews", views);
+
+    // Display counter
+    document.getElementById("viewCount").textContent =
+        Number(views).toLocaleString();
+</script>
+
 
 </body>
 </html>
